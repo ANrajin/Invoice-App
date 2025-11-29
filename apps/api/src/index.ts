@@ -1,6 +1,8 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import customerRoutes from './routes/customers';
+import invoiceRoutes from './routes/invoices';
 
 dotenv.config();
 
@@ -9,6 +11,9 @@ const port = process.env.PORT || 3001;
 
 app.use(cors());
 app.use(express.json());
+
+app.use('/customers', customerRoutes);
+app.use('/invoices', invoiceRoutes);
 
 app.get('/', (req: Request, res: Response) => {
     res.send('Invoice App API is running');
