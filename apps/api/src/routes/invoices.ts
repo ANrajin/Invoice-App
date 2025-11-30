@@ -12,7 +12,7 @@ router.get('/', async (req, res) => {
         });
 
         // Transform to match frontend expected format
-        const formattedInvoices = invoices.map(inv => ({
+        const formattedInvoices = invoices.map((inv: any) => ({
             ...inv,
             customerName: inv.customer.name,
         }));
@@ -71,7 +71,7 @@ router.put('/:id', async (req, res) => {
         const { items, customerId, ...invoiceData } = req.body;
 
         // Transaction to update invoice and replace items
-        const invoice = await prisma.$transaction(async (tx) => {
+        const invoice = await prisma.$transaction(async (tx: any) => {
             // Delete existing items
             await tx.invoiceItem.deleteMany({
                 where: { invoiceId: req.params.id },
