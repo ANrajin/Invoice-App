@@ -6,25 +6,31 @@ import { useInvoiceState } from '../hooks/useInvoiceState';
 import { InvoiceView } from './InvoiceView';
 import { InvoiceEditor } from './InvoiceEditor';
 
+import { useInvoiceMutation } from '../hooks/useInvoiceMutation';
+
 export const InvoiceContainer = () => {
-    const { invoices, isLoading } = useInvoiceData();
+    const { invoices, isLoading, refetch } = useInvoiceData();
     const { isModalOpen, selectedInvoiceId, openCreateModal, openEditModal, closeModal } = useInvoiceState();
 
-    const handleCreate = (data: any) => {
-        console.log('Create invoice:', data);
-        // Here we would call the mutation hook
+    const { createInvoice, updateInvoice, deleteInvoice } = useInvoiceMutation(() => {
+        refetch();
         closeModal();
+    });
+
+    const handleCreate = async (data: any) => {
+        await createInvoice(data);
     };
 
-    const handleUpdate = (data: any) => {
-        console.log('Update invoice:', selectedInvoiceId, data);
-        // Here we would call the mutation hook
-        closeModal();
+    const handleUpdate = async (data: any) => {
+        if (selectedInvoiceId) {
+            await updateInvoice(selectedInvoiceId, data);
+        }
     };
 
-    const handleDelete = (id: string) => {
-        console.log('Delete invoice:', id);
-        // Here we would call the mutation hook
+    const handleDelete = async (id: string) => {
+        if (confirm('Are you sure you want to delete this invoice?')) {
+            await deleteInvoice(id);
+        }
     };
 
     const selectedInvoice = invoices.find((i) => i.id === selectedInvoiceId);

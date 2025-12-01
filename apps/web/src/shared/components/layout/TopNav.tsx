@@ -1,8 +1,19 @@
 'use client';
 
-import { HiBell, HiUserCircle } from 'react-icons/hi';
+import { HiBell, HiUserCircle, HiSun, HiMoon } from 'react-icons/hi';
+import { useTheme } from '../../context/ThemeContext';
 
 export const TopNav = () => {
+    const { theme, setTheme, resolvedTheme } = useTheme();
+
+    const toggleTheme = () => {
+        if (theme === 'system') {
+            setTheme(resolvedTheme === 'dark' ? 'light' : 'dark');
+        } else {
+            setTheme(theme === 'dark' ? 'light' : 'dark');
+        }
+    };
+
     return (
         <nav className="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
             <div className="px-3 py-3 lg:px-5 lg:pl-3">
@@ -26,6 +37,13 @@ export const TopNav = () => {
                     </div>
                     <div className="flex items-center">
                         <div className="flex items-center ms-3 gap-4">
+                            <button
+                                onClick={toggleTheme}
+                                className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
+                                title={`Current theme: ${theme}`}
+                            >
+                                {resolvedTheme === 'dark' ? <HiSun className="w-6 h-6" /> : <HiMoon className="w-6 h-6" />}
+                            </button>
                             <button className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">
                                 <HiBell className="w-6 h-6" />
                             </button>

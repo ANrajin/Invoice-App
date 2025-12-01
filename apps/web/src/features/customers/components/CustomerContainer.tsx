@@ -6,25 +6,31 @@ import { useCustomerState } from '../hooks/useCustomerState';
 import { CustomerView } from './CustomerView';
 import { CustomerEditor } from './CustomerEditor';
 
+import { useCustomerMutation } from '../hooks/useCustomerMutation';
+
 export const CustomerContainer = () => {
-    const { customers, isLoading } = useCustomerData();
+    const { customers, isLoading, refetch } = useCustomerData();
     const { isModalOpen, selectedCustomerId, openCreateModal, openEditModal, closeModal } = useCustomerState();
 
-    const handleCreate = (data: any) => {
-        console.log('Create customer:', data);
-        // Here we would call the mutation hook
+    const { createCustomer, updateCustomer, deleteCustomer } = useCustomerMutation(() => {
+        refetch();
         closeModal();
+    });
+
+    const handleCreate = async (data: any) => {
+        await createCustomer(data);
     };
 
-    const handleUpdate = (data: any) => {
-        console.log('Update customer:', selectedCustomerId, data);
-        // Here we would call the mutation hook
-        closeModal();
+    const handleUpdate = async (data: any) => {
+        if (selectedCustomerId) {
+            await updateCustomer(selectedCustomerId, data);
+        }
     };
 
-    const handleDelete = (id: string) => {
-        console.log('Delete customer:', id);
-        // Here we would call the mutation hook
+    const handleDelete = async (id: string) => {
+        if (confirm('Are you sure you want to delete this customer?')) {
+            await deleteCustomer(id);
+        }
     };
 
     const selectedCustomer = customers.find((c) => c.id === selectedCustomerId);
